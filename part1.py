@@ -68,8 +68,11 @@ def compute():
 
     datasets = {'nc': noisy_circles, 'nm': noisy_moons, 'bvv': blobs_varied, 'add': aniso, 'b': blobs}
 
-
-    dct = answers["1A: datasets"] = {}
+    dct = answers["1A: datasets"] = {'nc': [nc[0],nc[1]],
+                                     'nm': [nm[0],nm[1]],
+                                     'bvv': [bvv[0],bvv[1]],
+                                     'add': [add[0],add[1]],
+                                     'b': [b[0],b[1]]}
 
     """
    B. Write a function called fit_kmeans that takes dataset (before any processing on it), i.e., pair of (data, label) Numpy arrays, and the number of clusters as arguments, and returns the predicted labels from k-means clustering. Use the init='random' argument and make sure to standardize the data (see StandardScaler transform), prior to fitting the KMeans estimator. This is the function you will use in the following questions. 
@@ -89,36 +92,29 @@ def compute():
     # and associated k-values with correct clusters.  key abbreviations: 'nc', 'nm', 'bvv', 'add', 'b'. 
     # The values are the list of k for which there is success. Only return datasets where the list of cluster size k is non-empty.
 
-    cluster_successes = {}
-    cluster_failures = []
+    kmeans_dct = {}
+    k_values = [2, 3, 5, 10]
 
-    fig, axes = plt.subplots(4, 5, figsize=(20, 16))
+    for dataset_key, (X, y) in answers['1A: datasets'].items():
+        labels_dict = {}
+        for k in k_values:
+            labels = fit_kmeans(X, k)
+            labels_dict[k] = labels
+        kmeans_dct[dataset_key] = ((X, y), labels_dict)  
 
-    for i, (key, (X, y)) in enumerate(datasets.items()):
-        for j, k in enumerate([2, 3, 5, 10]):
-            ax = axes[j, i]
-            labels = fit_kmeans((X, y), k)
-            ax.scatter(X[:, 0], X[:, 1], c=labels, cmap='viridis', s=50, alpha=0.7)
-            ax.set_title(f"{key}, k={k}")
-            ax.set_xticks(())
-            ax.set_yticks(())
-            
-            silhouette_avg = silhouette_score(X, labels)
-            if silhouette_avg > 0.5:
-                if key not in cluster_successes:
-                    cluster_successes[key] = []
-                cluster_successes[key].append(k)
-            else:
-                cluster_failures.append(key)
+    # Now call myplt.plot_part1C to plot the results
+    myplt.plot_part1C(kmeans_dct, 'part1_c.jpg')
 
-    plt.tight_layout()
-    plt.savefig("clusters.pdf")
 
-    dct = answers["1C: cluster successes"] = {"xy": [3,4], "zx": [2]} 
+
+    # dct value: return a dictionary of one or more abbreviated dataset names (zero or more elements) 
+    # and associated k-values with correct clusters.  key abbreviations: 'nc', 'nm', 'bvv', 'add', 'b'. 
+    # The values are the list of k for which there is success. Only return datasets where the list of cluster size k is non-empty.
+    dct = answers["1C: cluster successes"] = {"bvv": [3], "add": [3],"b":[3]} 
 
     # dct value: return a list of 0 or more dataset abbreviations (list has zero or more elements, 
     # which are abbreviated dataset names as strings)
-    dct = answers["1C: cluster failures"] = ["xy"]
+    dct = answers["1C: cluster failures"] = ["nc","nm"]
 
     """
     D. Repeat 1.C a few times and comment on which (if any) datasets seem to be sensitive to the choice of initialization for the k=2,3 cases. You do not need to add the additional plots to your report.
