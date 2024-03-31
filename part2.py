@@ -36,9 +36,13 @@ In this task you will explore different methods to find a good value for k
 # Change the arguments and return according to 
 # the question asked. 
 
-def fit_kmeans():
-    return None
+from sklearn.cluster import KMeans
 
+def fit_kmeans(X,k):
+    kmeans = KMeans(n_clusters=k)
+    kmeans.fit(X)
+    return kmeans.inertia_
+    #return None
 
 
 def compute():
@@ -50,6 +54,7 @@ def compute():
     """
 
     # dct: return value from the make_blobs function in sklearn, expressed as a list of three numpy arrays
+    blob_data, _ = make_blobs(n_samples=20, centers=5, center_box=(-20, 20), random_state=12)
     dct = answers["2A: blob"] = [np.zeros(0)]
 
     """
@@ -65,17 +70,36 @@ def compute():
 
     # dct value: a list of tuples, e.g., [[0, 100.], [1, 200.]]
     # Each tuple is a (k, SSE) pair
-    dct = answers["2C: SSE plot"] = [[0.0, 100.0]]
+
+    sse_values = []
+    k_range = range(1, 9)
+    for k in k_range:
+        sse = fit_kmeans(blob_data, k)
+        sse_values.append([k, sse])
+
+    dct = answers["2C: SSE plot"] = sse_values
 
     """
     D.	Repeat part 2.C for inertia (note this is an attribute in the kmeans estimator called _inertia). Do the optimal k’s agree?
     """
 
+    inertia_values = []
+    for k in k_range:
+        inertia = fit_kmeans(blob_data, k)
+        inertia_values.append([k, inertia])
+
+    answers["2D: inertia plot"] = inertia_values
+
+    # Determine if optimal k's agree
+    optimal_k_sse = min(sse_values, key=lambda x: x[1])[0]
+    optimal_k_inertia = min(inertia_values, key=lambda x: x[1])[0]
+    do_ks_agree = "yes" if optimal_k_sse == optimal_k_inertia else "no"
+
     # dct value has the same structure as in 2C
-    dct = answers["2D: inertia plot"] = [[0.0, 100.0]]
+    dct = answers["2D: inertia plot"] = do_ks_agree
 
     # dct value should be a string, e.g., "yes" or "no"
-    dct = answers["2D: do ks agree?"] = ""
+    dct = answers["2D: do ks agree?"] = "yes"
 
     return answers
 
