@@ -39,29 +39,54 @@ def compute():
     """
 
     # return value of scipy.io.loadmat()
-    answers["3A: toy data"] = {}
+    toy_data = io.loadmat("hierarchical_toy_data.mat")
+    answers["3A: toy data"] = toy_data
 
     """
     B.	Create a linkage matrix Z, and plot a dendrogram using the scipy.hierarchy.linkage and scipy.hierachy.dendrogram functions, with “single” linkage.
     """
 
+    Z = linkage(toy_data['X'], method='single')
+    dendrogram_data = dendrogram(Z)
+    plt.title('Dendrogram')
+    plt.xlabel('Data Points')
+    plt.ylabel('Distance')
+    plt.show()
+
     # Answer: NDArray
-    answers["3B: linkage"] = np.zeros(1)
+    answers["3B: linkage"] = Z
 
     # Answer: the return value of the dendogram function, dicitonary
-    answers["3B: dendogram"] = {}
+    answers["3B: dendogram"] = dendrogram_data
 
     """
     C.	Consider the merger of the cluster corresponding to points with index sets {I={8,2,13}} J={1,9}}. At what iteration (starting from 0) were these clusters merged? That is, what row does the merger of A correspond to in the linkage matrix Z? The rows count from 0. 
     """
 
+    I = {8, 2, 13}
+    J = {1, 9}
+    for i, (idx1, idx2, _, _) in enumerate(Z):
+        if set([int(idx1), int(idx2)]) == I.union(J):
+            answers["3C: iteration"] = i
+            break
+
     # Answer type: integer
-    answers["3C: iteration"] = -1
+    #answers["3C: iteration"] = -1
 
     """
     D.	Write a function that takes the data and the two index sets {I,J} above, and returns the dissimilarity given by single link clustering using the Euclidian distance metric. The function should output the same value as the 3rd column of the row found in problem 2.C.
     """
     # Answer type: a function defined above
+
+    def data_index_function(data, I, J):
+        # Calculate the dissimilarity between clusters I and J using single linkage and Euclidean distance
+        min_dist = np.inf
+        for i in I:
+            for j in J:
+                dist = np.linalg.norm(data[i] - data[j])
+                if dist < min_dist:
+                    min_dist = dist
+        return min_dist
     answers["3D: function"] = data_index_function
 
     """
@@ -70,14 +95,17 @@ def compute():
     """
 
     # List the clusters. the [{0,1,2}, {3,4}, {5}, {6}, ...] represents a list of lists.
-    answers["3E: clusters"] = [{0, 0}, {0, 0}]
+
+    available_clusters = [{i} for i in range(len(toy_data['X']))]
+    available_clusters.append(I.union(J))
+    answers["3E: clusters"] = available_clusters
 
     """
     F.	Single linked clustering is often criticized as producing clusters where “the rich get richer”, that is, where one cluster is continuously merging with all available points. Does your dendrogram illustrate this phenomenon?
     """
 
     # Answer type: string. Insert your explanation as a string.
-    answers["3F: rich get richer"] = ""
+    answers["3F: rich get richer"] = "no"
 
     return answers
 
