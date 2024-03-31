@@ -29,6 +29,11 @@ In the first task, you will explore how k-Means perform on datasets with diverse
 # Change the arguments and return according to 
 # the question asked. 
 
+
+from sklearn.datasets import make_circles, make_moons, make_blobs
+from sklearn.cluster import KMeans
+from sklearn.metrics import silhouette_score
+
 def fit_kmeans(dataset, n_clusters, random_state=42):
     X, y = dataset
     # Standardize the data
@@ -40,6 +45,8 @@ def fit_kmeans(dataset, n_clusters, random_state=42):
     kmeans.fit(X_scaled)
     
     return kmeans.labels_
+    #return None
+
 
 def compute():
     answers = {}
@@ -112,7 +119,7 @@ def compute():
     # dct value: return a list of 0 or more dataset abbreviations (list has zero or more elements, 
     # which are abbreviated dataset names as strings)
     dct = answers["1C: cluster failures"] = ["xy"]
-    
+
     """
     D. Repeat 1.C a few times and comment on which (if any) datasets seem to be sensitive to the choice of initialization for the k=2,3 cases. You do not need to add the additional plots to your report.
 
@@ -141,6 +148,7 @@ def compute():
     dct = answers["1D: datasets sensitive to initialization"] = dataset_sensitivity
 
     return answers
+
 
 # ----------------------------------------------------------------------
 if __name__ == "__main__":
