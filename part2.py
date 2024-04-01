@@ -81,6 +81,20 @@ def compute():
         sse_values.append([k, sse])
 
     dct = answers["2C: SSE plot"] = sse_values
+    def plot_sse(sse_values):
+    # Unzip the list of tuples into k and SSE values
+        k_values, sse = zip(*sse_values)
+
+    # Plot SSE as a function of k
+        plt.plot(k_values, sse, marker='o', linestyle='-')
+        plt.xlabel('Number of clusters (k)')
+        plt.ylabel('Sum of Squared Errors (SSE)')
+        plt.title('SSE as a function of k')
+        plt.xticks(k_values)
+        plt.grid(True)
+        plt.show()
+    # Call the function to plot SSE
+    plot_sse(sse_values)
 
     """
     D.	Repeat part 2.C for inertia (note this is an attribute in the kmeans estimator called _inertia). Do the optimal k’s agree?
