@@ -63,12 +63,7 @@ def compute():
     C.	Consider the merger of the cluster corresponding to points with index sets {I={8,2,13}} J={1,9}}. At what iteration (starting from 0) were these clusters merged? That is, what row does the merger of A correspond to in the linkage matrix Z? The rows count from 0. 
     """
 
-    I = {8, 2, 13}
-    J = {1, 9}
-    for i, (idx1, idx2, _, _) in enumerate(Z):
-        if set([int(idx1), int(idx2)]) == I.union(J):
-            answers["3C: iteration"] = 4
-            break
+    answers["3C: iteration"] = 4
 
     # Answer type: integer
     #answers["3C: iteration"] = -1
@@ -78,6 +73,8 @@ def compute():
     """
     # Answer type: a function defined above
 
+    I = {8, 2, 13}
+    J = {1, 9}
     def data_index_function(data, I, J):
         # Calculate the dissimilarity between clusters I and J using single linkage and Euclidean distance
         min_dist = np.inf
