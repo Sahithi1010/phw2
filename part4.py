@@ -26,12 +26,39 @@ In this task, you will explore hierarchical clustering over different datasets. 
 # Change the arguments and return according to 
 # the question asked. 
 
-def fit_hierarchical_cluster():
-    return None
+def fit_hierarchical_cluster(dataset, linkage_type='ward', n_clusters=2):
+    X, _ = dataset
+    # Standardize the data
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(X)
 
-def fit_modified():
-    return None
+    # Fit AgglomerativeClustering estimator
+    hierarchical_cluster = AgglomerativeClustering(n_clusters=n_clusters, linkage=linkage_type)
+    hierarchical_cluster.fit(X_scaled)
 
+    return hierarchical_cluster.labels_
+
+def fit_modified(dataset):
+    X, _ = dataset
+    # Standardize the data
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(X)
+
+    # Calculate linkage matrix
+    Z = linkage(X_scaled, method='ward')
+
+    # Find the maximum rate of change of the distance between successive cluster merges
+    diff = np.diff(Z[:, 2], 2)
+    max_diff_idx = np.argmax(diff)
+
+    # Use the maximum rate of change as the cut-off distance
+    cut_off_distance = Z[max_diff_idx, 2]
+
+    # Perform hierarchical clustering with cut-off distance
+    hierarchical_cluster = AgglomerativeClustering(distance_threshold=cut_off_distance, linkage='ward')
+    hierarchical_cluster.fit(X_scaled)
+
+    return hierarchical_cluster.labels_
 
 def compute():
     answers = {}
