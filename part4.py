@@ -74,6 +74,14 @@ def compute():
     blobs_varied = make_blobs(n_samples=100, cluster_std=[1.0, 2.5, 0.5], random_state=170)
     aniso = (np.dot(blobs_varied[0], [[0.6, -0.6], [-0.4, 0.8]]), blobs_varied[1])
     blobs = make_blobs(n_samples=100, random_state=8)
+
+    datasets = {'nc': noisy_circles, 'nm': noisy_moons, 'bvv': blobs_varied, 'add': aniso, 'b': blobs}
+
+    dct = answers["1A: datasets"] = {'nc': [noisy_circles[0],noisy_circles[1]],
+                                     'nm': [noisy_moons[0],noisy_moons[1]],
+                                     'bvv': [blobs_varied[0],blobs_varied[1]],
+                                     'add': [aniso[0],aniso[1]],
+                                     'b': [blobs[0],blobs[1]]}
     
 
     # dct value:  the `fit_hierarchical_cluster` function
