@@ -76,6 +76,9 @@ def compute():
     blobs = make_blobs(n_samples=100, random_state=8)
 
     datasets = {'nc': noisy_circles, 'nm': noisy_moons, 'bvv': blobs_varied, 'add': aniso, 'b': blobs}
+    blob_data, _ = make_blobs(n_samples=n_samples, random_state=random_state)
+    transformation = [[0.6, -0.6], [-0.4, 0.8]]
+    add = np.dot(blob_data, transformation)
 
     dct = answers["1A: datasets"] = {'nc': [noisy_circles[0],noisy_circles[1]],
                                      'nm': [noisy_moons[0],noisy_moons[1]],
