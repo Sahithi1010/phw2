@@ -96,13 +96,14 @@ def compute():
     available_clusters = [{i} for i in range(len(toy_data['X']))]
     available_clusters.append(I.union(J))
     answers["3E: clusters"] = available_clusters
+    answers["3E: clusters"] = [{4},{6,14},{8,2,13,1,9},{5},{11},{0},{10},{3},{7},{12}]
 
     """
     F.	Single linked clustering is often criticized as producing clusters where “the rich get richer”, that is, where one cluster is continuously merging with all available points. Does your dendrogram illustrate this phenomenon?
     """
 
     # Answer type: string. Insert your explanation as a string.
-    answers["3F: rich get richer"] = "no"
+    answers["3F: rich get richer"] = "yes,rich gets richer refers to how wealthy people get wealth overtime;Bigger clusters are more likely to draw smaller clusters or more points, which makes them even bigger."
 
     return answers
 
